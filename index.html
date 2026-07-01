@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation vadrouille</title>
+    <style>
+        /* Design soft dans les tons roses/pastels */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fff0f5 0%, #ffd1dc 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Empêche les barres de défilement */
+        }
+
+        /* Boîte centrale */
+        #container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(255, 182, 193, 0.4);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto; /* Permet de scroller si le formulaire est grand sur téléphone */
+        }
+
+        h1 {
+            color: #d81b60;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        p {
+            color: #4a4a4a;
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        /* Zone des boutons */
+        .buttons-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            min-height: 50px;
+        }
+
+        /* Style global des boutons */
+        button {
+            padding: 12px 28px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        /* Bouton OUI */
+        #btn-oui {
+            background-color: #ff5c8a;
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 92, 138, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        #btn-oui:hover {
+            transform: scale(1.05);
+            background-color: #ff4073;
+        }
+
+        /* Bouton NON - Déplacement fluide */
+        #btn-non {
+            background-color: #f0f0f0;
+            color: #666;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: left 0.3s ease-out, top 0.3s ease-out; 
+            z-index: 1000;
+        }
+
+        /* --- STYLES AJOUTÉS POUR LE FORMULAIRE --- */
+        .form-container {
+            text-align: left;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-container h2 {
+            color: #d81b60;
+            font-size: 1.4em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4a4a4a;
+            font-size: 1.05em;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff5c8a;
+            cursor: pointer;
+        }
+
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #ffb6c1;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #ff5c8a;
+            box-shadow: 0 0 5px rgba(255, 92, 138, 0.3);
+        }
+
+        .submit-btn {
+            background-color: #ff5c8a;
+            color: white;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(255, 92, 138, 0.3);
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #ff4073;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <h1>Coucou 😳</h1>
+        <p>J'ai trop hâte que tu viennes en vacances. Dis, est-ce que tu veux partir en vadrouille avec ton chéri ?</p>
+        
+        <div class="buttons-wrapper">
+            <button id="btn-oui">Oui 😊</button>
+            <button id="btn-non">Non 😢</button>
+        </div>
+    </div>
+
+    <script>
+        const btnNon = document.getElementById("btn-non");
+        const btnOui = document.getElementById("btn-oui");
+        const container = document.getElementById("container");
+
+        // Fonction pour déplacer le bouton de manière fluide
+        function moveButton() {
+            if (btnNon.style.position !== 'fixed') {
+                const rect = btnNon.getBoundingClientRect();
+                btnNon.style.left = rect.left + 'px';
+                btnNon.style.top = rect.top + 'px';
+                btnNon.style.position = 'fixed';
+                btnNon.offsetHeight; 
+            }
+
+            const maxX = window.innerWidth - btnNon.offsetWidth;
+            const maxY = window.innerHeight - btnNon.offsetHeight;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            btnNon.style.left = randomX + 'px';
+            btnNon.style.top = randomY + 'px';
+        }
+
+        btnNon.addEventListener("mouseover", moveButton);
+        btnNon.addEventListener("touchstart", function(e) {
+            e.preventDefault(); 
+            moveButton();
+        });
+
+        // Affichage du formulaire au clic sur "Oui 😊"
+        btnOui.addEventListener("click", function() {
+            container.innerHTML = `
+                <div class="form-container">
+                    <h2>Génial ! Choisis ce qui te fait envie ✨</h2>
+                    
+                    <!-- Formulaire d'envoi de mail via FormSubmit -->
+                    <form action="https://formsubmit.co/ecw3842@gmail.com" method="POST">
+                        
+                        <!-- Configuration invisible -->
+                        <input type="hidden" name="_subject" value="Nouveau programme de vadrouille validé ! 💖">
+                        <input type="hidden" name="_captcha" value="false">
+                        
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="Activités" value="Resto en amoureux">
+                                🍽️ Un petit resto en amoureux
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="Activités" value="Balade et coucher de soleil">
+                                🌅 Balade et coucher de soleil
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="Activités" value="Visite d'un coin sympa">
+                                📸 Visite d'un coin sympa
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="Activités" value="Soirée chill et film">
+                                🍿 Soirée chill et film
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="Activités" value="Grasse mat' et petit déj">
+                                🥐 Grasse mat' & petit déj
+                            </label>
+                        </div>
+
+                        <textarea name="Message" rows="4" placeholder="Un petit mot à ajouter ? (ou d'autres envies !)"></textarea>
+                        
+                        <button type="submit" class="submit-btn">Ok ❤️</button>
+                    </form>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
