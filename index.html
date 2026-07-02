@@ -196,7 +196,7 @@
         }
 
         .game-card.selected {
-            background-color: #4caf50; /* Vert quand on clique */
+            background-color: #4caf50; 
             color: white;
             border-color: #4caf50;
             transform: scale(1.05);
@@ -306,7 +306,8 @@
                 </div>
             </div>
             
-            <button onclick="goToGame()" class="action-btn btn-pink">Ok, on passe à la suite !</button>
+            <!-- J'ai ajouté type="button" pour être sûr à 200% que ça ne recharge pas la page -->
+            <button type="button" onclick="goToGame()" class="action-btn btn-pink">Ok, on passe à la suite !</button>
         </div>
 
         <!-- ETAPE 3 : LE JEU "TU PREFERES" -->
@@ -321,7 +322,7 @@
         <div id="step-intermission" class="step">
             <h1>Mmmh pas mal... 😏</h1>
             <p style="font-size: 1.3em;">On va voir si tu t'en sors aussi bien avec la suite. Passons à un peu plus compliqué !</p>
-            <button onclick="startPartTwo()" class="action-btn btn-pink">Je suis prête !</button>
+            <button type="button" onclick="startPartTwo()" class="action-btn btn-pink">Je suis prête !</button>
         </div>
 
         <!-- ETAPE 5 : LE FORMULAIRE FINAL -->
@@ -329,7 +330,7 @@
             <h1>Une dernière chose... 💌</h1>
             <p>Laisse-moi un petit mot (ou si t'as d'autres envies pour le séjour !)</p>
             <textarea id="final-message" rows="4" placeholder="Écris ton mot ici..."></textarea>
-            <button id="btn-submit" class="action-btn btn-pink" style="width: 100%;">Envoyer tout ça ❤️</button>
+            <button type="button" id="btn-submit" class="action-btn btn-pink" style="width: 100%;">Envoyer tout ça ❤️</button>
         </div>
 
         <!-- ETAPE 6 : MERCI -->
