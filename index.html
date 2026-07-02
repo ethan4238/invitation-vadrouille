@@ -17,28 +17,27 @@
             background: linear-gradient(135deg, #fff0f5 0%, #ffd1dc 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden; 
-            position: relative; /* Indispensable pour l'animation des cœurs */
+            position: relative; 
         }
 
-        /* --- FOND ANIMÉ : Petits cœurs flottants --- */
+        /* --- ANIMATION DE FOND --- */
         .bg-heart {
             position: fixed;
             bottom: -50px;
             font-size: 24px;
-            color: rgba(255, 105, 180, 0.35); /* Rose doux semi-transparent */
-            z-index: 1; /* Reste bien derrière le bloc blanc */
+            color: rgba(255, 105, 180, 0.3);
+            z-index: 1; 
             animation: floatUp linear infinite;
-            pointer-events: none; /* Empêche de cliquer dessus */
+            pointer-events: none; 
             user-select: none;
         }
 
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
         }
-        /* --------------------------------------------- */
 
         /* Boîte centrale */
         #container {
@@ -52,7 +51,7 @@
             max-height: 90vh;
             overflow-y: auto; 
             position: relative; 
-            z-index: 10; /* Toujours au premier plan */
+            z-index: 10; 
         }
 
         h1 {
@@ -249,24 +248,39 @@
     </div>
 
     <script>
-        // --- NOUVEAU : GENERATEUR DE COEURS VOLANTS ---
-        function createFloatingHeart() {
+        // --- GENERATEUR DE COEURS VOLANTS ---
+        function createFloatingHeart(isInitial = false) {
             const heart = document.createElement('div');
             heart.classList.add('bg-heart');
             heart.innerText = Math.random() > 0.5 ? '🤍' : '🩷'; 
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 5 + 6) + 's';
-            heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+            
+            const duration = Math.random() * 5 + 5; // Durée entre 5s et 10s
+            heart.style.animationDuration = duration + 's';
+            
+            // L'astuce magique : un délai négatif fait commencer l'animation en plein milieu !
+            if (isInitial) {
+                heart.style.animationDelay = '-' + (Math.random() * duration) + 's';
+            }
+            
+            heart.style.fontSize = Math.random() * 15 + 15 + 'px';
             
             document.body.appendChild(heart);
 
+            // On nettoie les cœurs une fois qu'ils ont fini de monter
             setTimeout(() => {
                 heart.remove();
-            }, 11000);
+            }, duration * 1000);
         }
-        // Génère un petit cœur toutes les 800 ms
-        setInterval(createFloatingHeart, 800);
-        // ----------------------------------------------
+
+        // 1. Au chargement de la page, on génère 15 cœurs instantanément répartis sur l'écran
+        for(let i = 0; i < 15; i++) {
+            createFloatingHeart(true);
+        }
+
+        // 2. Ensuite, on continue d'en générer un nouveau toutes les 800ms
+        setInterval(() => createFloatingHeart(false), 800);
+        // ------------------------------------
 
         const btnNon = document.getElementById("btn-non");
         const btnOui = document.getElementById("btn-oui");
@@ -287,7 +301,7 @@
             isPlaying = !isPlaying;
         }
 
-        // Fonction pour fuite du bouton
+        // --- FUITE DU BOUTON NON ---
         function moveButton() {
             if (btnNon.style.position !== 'fixed') {
                 const rect = btnNon.getBoundingClientRect();
@@ -313,7 +327,7 @@
             moveButton();
         });
 
-        // Affichage du formulaire
+        // --- AFFICHAGE DU FORMULAIRE ---
         btnOui.addEventListener("click", function() {
             
             // Lancement des confettis !
@@ -332,8 +346,9 @@
                     <form id="form-vacances" action="https://formsubmit.co/ecw3842@gmail.com" method="POST">
                         <input type="hidden" name="_subject" value="Nouveau programme de vadrouille validé ! 💖">
                         <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_template" value="box"> <!-- AMELIORATION DU DESIGN DU MAIL -->
+                        <input type="hidden" name="_template" value="box">
                         
+                        <!-- CATEGORIE AVENTURE -->
                         <h3 class="category-title">🏕️ Mode Aventure</h3>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
@@ -350,6 +365,7 @@
                             </label>
                         </div>
 
+                        <!-- CATEGORIE DETENTE -->
                         <h3 class="category-title">💆‍♀️ Mode Détente</h3>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
@@ -370,6 +386,7 @@
                             </label>
                         </div>
 
+                        <!-- CATEGORIE SORTIES & VAN -->
                         <h3 class="category-title">🚐 Mode Van & Sorties</h3>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
@@ -401,7 +418,7 @@
                 </div>
             `;
 
-            // INTERCEPTION DE L'ENVOI POUR AFFICHER LE MESSAGE MIGNON
+            // INTERCEPTION DE L'ENVOI POUR AFFICHER LA PHOTO
             const form = document.getElementById("form-vacances");
             form.addEventListener("submit", function(e) {
                 e.preventDefault(); 
@@ -416,7 +433,6 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // ON AFFICHE LE MESSAGE MIGNON ICI
                         container.innerHTML = `
                             <div class="form-container" style="text-align: center;">
                                 <img src="photo.jpg" alt="Ton chéri" style="width: 400px; height: 300px; object-fit: cover; border-radius: 5%; box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4); margin-bottom: 15px;">
@@ -434,7 +450,7 @@
             });
         });
 
-        // Fonction pour changer le coeur blanc en coeur rouge au clic
+        // Changement du coeur au clic
         function toggleHeart(checkbox) {
             const heartSpan = checkbox.nextElementSibling;
             if (checkbox.checked) {
