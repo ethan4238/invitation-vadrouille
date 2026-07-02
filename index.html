@@ -70,7 +70,7 @@
             margin-bottom: 30px;
         }
 
-        /* Utilities pour cacher/afficher les étapes */
+        /* --- GESTION DES ETAPES --- */
         .step { display: none; animation: fadeIn 0.5s ease-in; }
         .step.active { display: block; }
 
@@ -140,11 +140,12 @@
         }
 
         .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
+        
         .custom-checkbox { display: none; }
         
         .checkbox-label {
             display: flex; align-items: center; gap: 10px;
-            color: #4a4a4a; font-size: 1.05em; cursor: pointer; transition: 0.2s;
+            color: #4a4a4a; font-size: 1.05em; cursor: pointer; transition: 0.2s; line-height: 1.3;
         }
         .checkbox-label:hover { color: #d81b60; }
         
@@ -187,6 +188,7 @@
             align-items: center;
             justify-content: center;
             min-height: 100px;
+            text-align: center;
         }
 
         .game-card:hover {
@@ -248,11 +250,11 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" value="Bivouac Bouquetins" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
-                            <span class="heart-icon">🤍</span> 🐐 Bivouac (Mont Aiguille)
+                            <span class="heart-icon">🤍</span> 🐐 Bivouac pour voir des bouquetins (Mont Aiguille)
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" value="Bivouac Lacs" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
-                            <span class="heart-icon">🤍</span> ⛺ Bivouac Plateau des lacs
+                            <span class="heart-icon">🤍</span> ⛺ Bivouac au Plateau des lacs
                         </label>
                     </div>
                 </div>
@@ -262,7 +264,7 @@
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" value="Auberge montagne" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
-                            <span class="heart-icon">🤍</span> 🍲 Resto dans une auberge
+                            <span class="heart-icon">🤍</span> 🍲 Resto dans une auberge (dans la montagne)
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" value="Massage" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
@@ -270,11 +272,11 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" value="Grasse mat" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
-                            <span class="heart-icon">🤍</span> 🥐 Grasse mat' & p'tit déj'
+                            <span class="heart-icon">🤍</span> 🥐 Grasse mat' et p'tit déj'
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" value="Bastille" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
-                            <span class="heart-icon">🤍</span> 🌇 Coucher de soleil Bastille
+                            <span class="heart-icon">🤍</span> 🌇 Coucher de soleil à la Bastille
                         </label>
                     </div>
                 </div>
@@ -287,11 +289,11 @@
                             <span class="heart-icon">🤍</span> 🌊 Visiter Annecy
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" value="Soirée van" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
-                            <span class="heart-icon">🤍</span> 🚐 Soirée chill & film (Van)
+                            <input type="checkbox" value="Soirée voiture aménagée" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🚐 Soirée chill et film dans la voiture aménagée ?
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" value="Musée" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <input type="checkbox" value="Musée Grenoble" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
                             <span class="heart-icon">🤍</span> 🖼️ Musée de Grenoble
                         </label>
                         <label class="checkbox-label">
@@ -299,14 +301,13 @@
                             <span class="heart-icon">🤍</span> ⚽ Match de l'ASSE
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" value="Padel" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
-                            <span class="heart-icon">🤍</span> 🎾 Padel à 4
+                            <input type="checkbox" value="Padel à 4" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🎾 Padel à 4 avec Gabin, sa copine et nous deux :)
                         </label>
                     </div>
                 </div>
             </div>
             
-            <!-- J'ai ajouté type="button" pour être sûr à 200% que ça ne recharge pas la page -->
             <button type="button" onclick="goToGame()" class="action-btn btn-pink">Ok, on passe à la suite !</button>
         </div>
 
