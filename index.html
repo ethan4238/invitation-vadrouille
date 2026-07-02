@@ -46,13 +46,16 @@
             border-radius: 16px;
             box-shadow: 0 8px 24px rgba(255, 182, 193, 0.4);
             text-align: center;
-            max-width: 450px;
+            max-width: 1000px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto; 
             position: relative; 
             z-index: 10; 
         }
+
+        #container::-webkit-scrollbar { display: none; }
+        #container { -ms-overflow-style: none; scrollbar-width: none; }
 
         h1 {
             color: #d81b60;
@@ -67,7 +70,16 @@
             margin-bottom: 30px;
         }
 
-        /* Zone des boutons */
+        /* Utilities pour cacher/afficher les étapes */
+        .step { display: none; animation: fadeIn 0.5s ease-in; }
+        .step.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Boutons */
         .buttons-wrapper {
             position: relative;
             display: flex;
@@ -85,14 +97,15 @@
             cursor: pointer;
         }
 
-        #btn-oui {
+        .btn-pink {
             background-color: #ff5c8a;
             color: white;
             box-shadow: 0 4px 12px rgba(255, 92, 138, 0.3);
             transition: transform 0.2s, background-color 0.2s;
+            margin-top: 20px;
         }
 
-        #btn-oui:hover {
+        .btn-pink:hover {
             transform: scale(1.05);
             background-color: #ff4073;
         }
@@ -106,69 +119,90 @@
             z-index: 1000;
         }
 
-        /* STYLES FORMULAIRE */
-        .form-container {
-            text-align: left;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-container h2 {
-            color: #d81b60;
-            font-size: 1.4em;
-            text-align: center;
+        /* --- COLONNES ACTIVITÉS --- */
+        .categories-wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px; 
             margin-bottom: 20px;
+            text-align: left;
         }
 
-        /* Catégories */
+        .category-col { display: flex; flex-direction: column; }
+
         .category-title {
             color: #ff5c8a;
             font-size: 1.1em;
-            margin: 20px 0 10px 0;
+            margin: 0 0 15px 0;
             border-bottom: 2px dashed #ffd1dc;
             padding-bottom: 5px;
-            display: inline-block;
+            display: block;
         }
 
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        /* Cases en forme de coeurs */
-        .custom-checkbox {
-            display: none; 
-        }
-
+        .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
+        .custom-checkbox { display: none; }
+        
         .checkbox-label {
+            display: flex; align-items: center; gap: 10px;
+            color: #4a4a4a; font-size: 1.05em; cursor: pointer; transition: 0.2s;
+        }
+        .checkbox-label:hover { color: #d81b60; }
+        
+        .heart-icon { font-size: 1.3em; transition: 0.3s; min-width: 25px; }
+        .custom-checkbox:checked + .heart-icon { transform: scale(1.2); }
+
+        @media (max-width: 850px) {
+            .categories-wrapper { grid-template-columns: 1fr; }
+        }
+
+        /* --- LE JEU : TU PREFERES --- */
+        .game-title {
+            font-size: 2em;
+            color: #d81b60;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .cards-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .game-card {
+            background: white;
+            border: 2px solid #ffb6c1;
+            border-radius: 15px;
+            padding: 30px 20px;
+            width: 200px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #4a4a4a;
-            font-size: 1.05em;
-            cursor: pointer;
-            transition: 0.2s;
+            justify-content: center;
+            min-height: 100px;
         }
 
-        .checkbox-label:hover {
-            color: #d81b60;
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4);
+            border-color: #ff5c8a;
         }
 
-        .heart-icon {
-            font-size: 1.3em;
-            transition: 0.3s;
+        .game-card.selected {
+            background-color: #4caf50; /* Vert quand on clique */
+            color: white;
+            border-color: #4caf50;
+            transform: scale(1.05);
         }
 
-        .custom-checkbox:checked + .heart-icon {
-            transform: scale(1.2);
-        }
-
+        /* Textarea pour la fin */
         textarea {
             width: 100%;
             box-sizing: border-box;
@@ -176,86 +210,164 @@
             border: 1px solid #ffb6c1;
             border-radius: 8px;
             font-family: inherit;
-            font-size: 1em;
+            font-size: 1.1em;
             resize: vertical;
-            margin-top: 20px;
+            margin-top: 10px;
             margin-bottom: 20px;
             outline: none;
         }
+        textarea:focus { border-color: #ff5c8a; box-shadow: 0 0 5px rgba(255, 92, 138, 0.3); }
 
-        textarea:focus {
-            border-color: #ff5c8a;
-            box-shadow: 0 0 5px rgba(255, 92, 138, 0.3);
-        }
-
-        .submit-btn {
-            background-color: #ff5c8a;
-            color: white;
-            width: 100%;
-            padding: 12px 28px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(255, 92, 138, 0.3);
-            transition: background-color 0.2s;
-        }
-
-        .submit-btn:hover {
-            background-color: #ff4073;
-        }
     </style>
 </head>
 <body>
 
     <div id="container">
-        <div id="question-section">
+        
+        <!-- ETAPE 1 : LA QUESTION -->
+        <div id="step-question" class="step active">
             <h1>Coucou 😳</h1>
             <p>J'ai trop hâte que tu viennes en vacances. Dis, est-ce que tu veux partir en vadrouille avec ton chéri ?</p>
-            
             <div class="buttons-wrapper">
-                <button id="btn-oui" class="action-btn">Oui 😊</button>
-                <button id="btn-non" class="action-btn">Non 😢</button>
+                <button id="btn-oui" class="action-btn btn-pink" style="margin-top:0;">Oui 😊</button>
+                <button id="btn-non" class="action-btn" style="margin-top:0;">Non 😢</button>
             </div>
         </div>
+
+        <!-- ETAPE 2 : LES ACTIVITES -->
+        <div id="step-activities" class="step">
+            <h2>Génial ! Choisis ce qui te fait envie ✨</h2>
+            
+            <div class="categories-wrapper">
+                <div class="category-col">
+                    <h3 class="category-title">🏕️ Mode Aventure</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Randonnée" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🥾 Randonnée à la journée
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Bivouac Bouquetins" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🐐 Bivouac (Mont Aiguille)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Bivouac Lacs" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> ⛺ Bivouac Plateau des lacs
+                        </label>
+                    </div>
+                </div>
+
+                <div class="category-col">
+                    <h3 class="category-title">💆‍♀️ Mode Détente</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Auberge montagne" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🍲 Resto dans une auberge
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Massage" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 💆‍♀️ Un massage
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Grasse mat" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🥐 Grasse mat' & p'tit déj'
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Bastille" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🌇 Coucher de soleil Bastille
+                        </label>
+                    </div>
+                </div>
+
+                <div class="category-col">
+                    <h3 class="category-title">🚐 Mode Van & Sorties</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Visite Annecy" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🌊 Visiter Annecy
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Soirée van" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🚐 Soirée chill & film (Van)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Musée" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🖼️ Musée de Grenoble
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Match ASSE" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> ⚽ Match de l'ASSE
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="Padel" class="custom-checkbox activity-cb" onchange="toggleHeart(this)">
+                            <span class="heart-icon">🤍</span> 🎾 Padel à 4
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="goToGame()" class="action-btn btn-pink">Ok, on passe à la suite !</button>
+        </div>
+
+        <!-- ETAPE 3 : LE JEU "TU PREFERES" -->
+        <div id="step-game" class="step">
+            <h1 class="game-title">Tu préfères ? 🤔</h1>
+            <div class="cards-wrapper" id="game-cards">
+                <!-- Les cartes seront injectées ici par le javascript -->
+            </div>
+        </div>
+
+        <!-- ETAPE 4 : L'ENTRACTE -->
+        <div id="step-intermission" class="step">
+            <h1>Mmmh pas mal... 😏</h1>
+            <p style="font-size: 1.3em;">On va voir si tu t'en sors aussi bien avec la suite. Passons à un peu plus compliqué !</p>
+            <button onclick="startPartTwo()" class="action-btn btn-pink">Je suis prête !</button>
+        </div>
+
+        <!-- ETAPE 5 : LE FORMULAIRE FINAL -->
+        <div id="step-final" class="step">
+            <h1>Une dernière chose... 💌</h1>
+            <p>Laisse-moi un petit mot (ou si t'as d'autres envies pour le séjour !)</p>
+            <textarea id="final-message" rows="4" placeholder="Écris ton mot ici..."></textarea>
+            <button id="btn-submit" class="action-btn btn-pink" style="width: 100%;">Envoyer tout ça ❤️</button>
+        </div>
+
+        <!-- ETAPE 6 : MERCI -->
+        <div id="step-merci" class="step">
+            <img src="photo.jpg" alt="Ton chéri" style="width: 400px; height: 300px; object-fit: cover; border-radius: 5%; box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4); margin-bottom: 15px;">
+            <h2 style="font-size: 1.8em; color: #d81b60;">C'est noté ! 🥰</h2>
+            <p style="font-size: 1.2em; margin-top: 10px;">Ton chéri va prendre en compte tes demandes mais ça vaudra un ou deux sourires quand même :)</p>
+        </div>
+
     </div>
 
     <script>
-        // --- GENERATEUR DE COEURS VOLANTS ---
+        // --- 1. ANIMATION DES COEURS EN FOND ---
         function createFloatingHeart(isInitial = false) {
             const heart = document.createElement('div');
             heart.classList.add('bg-heart');
             heart.innerText = Math.random() > 0.5 ? '🤍' : '🩷'; 
             heart.style.left = Math.random() * 100 + 'vw';
-            
             const duration = Math.random() * 5 + 5; 
             heart.style.animationDuration = duration + 's';
-            
-            if (isInitial) {
-                heart.style.animationDelay = '-' + (Math.random() * duration) + 's';
-            }
-            
+            if (isInitial) heart.style.animationDelay = '-' + (Math.random() * duration) + 's';
             heart.style.fontSize = Math.random() * 15 + 15 + 'px';
-            
             document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, duration * 1000);
+            setTimeout(() => heart.remove(), duration * 1000);
         }
-
-        for(let i = 0; i < 15; i++) {
-            createFloatingHeart(true);
-        }
+        for(let i = 0; i < 15; i++) createFloatingHeart(true);
         setInterval(() => createFloatingHeart(false), 800);
-        // ------------------------------------
 
+        // --- 2. GESTION DES ECRANS ---
+        function showStep(stepId) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById(stepId).classList.add('active');
+        }
+
+        // --- 3. FUITE DU BOUTON NON ---
         const btnNon = document.getElementById("btn-non");
         const btnOui = document.getElementById("btn-oui");
-        const container = document.getElementById("container");
-
-        // --- FUITE DU BOUTON NON ---
+        
         function moveButton() {
             if (btnNon.style.position !== 'fixed') {
                 const rect = btnNon.getBoundingClientRect();
@@ -264,154 +376,137 @@
                 btnNon.style.position = 'fixed';
                 btnNon.offsetHeight; 
             }
-
             const maxX = window.innerWidth - btnNon.offsetWidth;
             const maxY = window.innerHeight - btnNon.offsetHeight;
-            
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
-            
-            btnNon.style.left = randomX + 'px';
-            btnNon.style.top = randomY + 'px';
+            btnNon.style.left = Math.floor(Math.random() * maxX) + 'px';
+            btnNon.style.top = Math.floor(Math.random() * maxY) + 'px';
         }
-
         btnNon.addEventListener("mouseover", moveButton);
-        btnNon.addEventListener("touchstart", function(e) {
-            e.preventDefault(); 
-            moveButton();
-        });
+        btnNon.addEventListener("touchstart", function(e) { e.preventDefault(); moveButton(); });
 
-        // --- AFFICHAGE DU FORMULAIRE ---
+        // --- 4. CLIC SUR OUI (Vers activités) ---
         btnOui.addEventListener("click", function() {
-            
-            // Lancement des confettis !
-            confetti({
-                particleCount: 150,
-                spread: 80,
-                origin: { y: 0.6 },
-                colors: ['#ff5c8a', '#ffb6c1', '#d81b60', '#ffffff']
-            });
-
-            container.innerHTML = `
-                <div class="form-container">
-                    <h2>Génial ! Choisis ce qui te fait envie ✨</h2>
-                    
-                    <form id="form-vacances" action="https://formsubmit.co/ecw3842@gmail.com" method="POST">
-                        <input type="hidden" name="_subject" value="Nouveau programme de vadrouille validé ! 💖">
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_template" value="box">
-                        
-                        <!-- CATEGORIE AVENTURE -->
-                        <h3 class="category-title">🏕️ Mode Aventure</h3>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Randonnée" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🥾 Randonnée à la journée
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Bivouac Bouquetins" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🐐 Bivouac pour voir des bouquetins (Mont Aiguille)
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Bivouac Lacs" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> ⛺ Bivouac au Plateau des lacs
-                            </label>
-                        </div>
-
-                        <!-- CATEGORIE DETENTE -->
-                        <h3 class="category-title">💆‍♀️ Mode Détente</h3>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Auberge montagne" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🍲 Resto dans une auberge (dans la montagne)
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Massage" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 💆‍♀️ Un massage
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Grasse mat" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🥐 Grasse mat' et p'tit déj'
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Bastille" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🌇 Coucher de soleil à la Bastille
-                            </label>
-                        </div>
-
-                        <!-- CATEGORIE SORTIES & VAN -->
-                        <h3 class="category-title">🚐 Mode Van & Sorties</h3>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Visite Annecy" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🌊 Visiter Annecy
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Soirée voiture aménagée" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🚐 Soirée chill et film dans la voiture aménagée ?
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Musée Grenoble" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🖼️ Musée de Grenoble
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Match ASSE" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> ⚽ Match de l'ASSE
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="Activités" value="Padel à 4" class="custom-checkbox" onchange="toggleHeart(this)">
-                                <span class="heart-icon">🤍</span> 🎾 Padel à 4 avec Gabin, sa copine et nous deux :)
-                            </label>
-                        </div>
-
-                        <textarea name="Message" rows="4" placeholder="Laisse moi un petit mot (ou si t'as d'autres envies !)"></textarea>
-                        
-                        <button type="submit" class="submit-btn">Ok ❤️</button>
-                    </form>
-                </div>
-            `;
-
-            // INTERCEPTION DE L'ENVOI POUR LA PAGE DE FIN
-            const form = document.getElementById("form-vacances");
-            form.addEventListener("submit", function(e) {
-                e.preventDefault(); 
-                
-                const btn = form.querySelector('.submit-btn');
-                btn.innerText = "Envoi en cours... 💌"; 
-
-                fetch(form.action, {
-                    method: "POST",
-                    body: new FormData(form),
-                    headers: { 'Accept': 'application/json' }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        container.innerHTML = `
-                            <div class="form-container" style="text-align: center;">
-                                <img src="photo.jpg" alt="Ton chéri" style="width: 400px; height: 300px; object-fit: cover; border-radius: 5%; box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4); margin-bottom: 15px;">
-                                <h2 style="font-size: 1.8em; color: #d81b60;">C'est noté ! 🥰</h2>
-                                <p style="font-size: 1.2em; margin-top: 10px;">Ton chéri va prendre en compte tes demandes mais ça vaudra un ou deux sourires quand même :)</p>
-                            </div>
-                        `;
-                    } else {
-                        btn.innerText = "Oups, erreur ! Réessaie ❤️";
-                    }
-                })
-                .catch(error => {
-                    btn.innerText = "Oups, erreur ! Réessaie ❤️";
-                });
-            });
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ff5c8a', '#ffb6c1', '#ffffff'] });
+            showStep('step-activities');
         });
 
-        // Changement du coeur au clic
+        // Fonction coeur checkbox
         function toggleHeart(checkbox) {
-            const heartSpan = checkbox.nextElementSibling;
-            if (checkbox.checked) {
-                heartSpan.innerText = "❤️";
-            } else {
-                heartSpan.innerText = "🤍";
-            }
+            checkbox.nextElementSibling.innerText = checkbox.checked ? "❤️" : "🤍";
         }
+
+        // --- 5. LE JEU "TU PREFERES" ---
+        const questionsTuPreferes = [
+            // PARTIE 1 (Facile)
+            ["Sucré 🥐", "Salé 🧀"],
+            ["Montagne 🏔️", "Plage 🏖️"],
+            ["Lève-tôt 🌅", "Couche-tard 🌃"],
+            ["Hôtel confort 🛏️", "Bivouac sauvage ⛺"],
+            ["Resto chic 🍷", "Pique-nique 🥪"],
+            // PARTIE 2 (Compliqué)
+            ["Ne plus jamais manger de fromage 😱", "Ne plus jamais boire de vin 😭"],
+            ["Pouvoir voler 🕊️", "Être invisible 👻"],
+            ["Oublier ton téléphone 📱", "Oublier ta brosse à dents 🪥"],
+            ["Toujours dire la vérité 😇", "Toujours mentir 🤥"],
+            ["Un gros bisou 💋", "Un gros câlin 🤗"]
+        ];
+
+        let currentQuestionIndex = 0;
+        let gameAnswers = [];
+
+        function goToGame() {
+            showStep('step-game');
+            renderCards();
+        }
+
+        function renderCards() {
+            const cardsContainer = document.getElementById('game-cards');
+            cardsContainer.innerHTML = ''; // Vide les anciennes cartes
+
+            const q = questionsTuPreferes[currentQuestionIndex];
+            
+            // Création carte 1
+            const card1 = document.createElement('div');
+            card1.className = 'game-card';
+            card1.innerText = q[0];
+            card1.onclick = () => selectCard(card1, q[0]);
+
+            // Création carte 2
+            const card2 = document.createElement('div');
+            card2.className = 'game-card';
+            card2.innerText = q[1];
+            card2.onclick = () => selectCard(card2, q[1]);
+
+            cardsContainer.appendChild(card1);
+            cardsContainer.appendChild(card2);
+        }
+
+        function selectCard(cardElement, answer) {
+            // Empêche de cliquer deux fois vite
+            if(cardElement.classList.contains('selected')) return; 
+
+            // Met la carte en vert
+            cardElement.classList.add('selected');
+            gameAnswers.push(answer);
+
+            // Attend 600ms pour montrer le vert, puis passe à la suite
+            setTimeout(() => {
+                currentQuestionIndex++;
+                
+                if (currentQuestionIndex === 5) {
+                    showStep('step-intermission');
+                } else if (currentQuestionIndex === 10) {
+                    showStep('step-final');
+                } else {
+                    renderCards(); // Question suivante
+                }
+            }, 600);
+        }
+
+        function startPartTwo() {
+            showStep('step-game');
+            renderCards();
+        }
+
+        // --- 6. SOUMISSION FINALE DES DONNEES ---
+        document.getElementById('btn-submit').addEventListener('click', function() {
+            const btnSubmit = this;
+            btnSubmit.innerText = "Envoi en cours... 💌";
+
+            // Récupère les activités cochées
+            const checkboxes = document.querySelectorAll('.activity-cb:checked');
+            let selectedActivities = [];
+            checkboxes.forEach(cb => selectedActivities.push(cb.value));
+
+            // Récupère le mot de la fin
+            const message = document.getElementById('final-message').value;
+
+            // Prépare les données à envoyer
+            const formData = new FormData();
+            formData.append("_subject", "💖 Vadrouille : Le verdict est tombé !");
+            formData.append("_template", "box");
+            formData.append("Activités choisies", selectedActivities.length > 0 ? selectedActivities.join(', ') : 'Aucune (bizarre...)');
+            formData.append("Réponses au jeu", gameAnswers.join(' | '));
+            formData.append("Mot de la fin", message);
+
+            // Envoi via fetch vers FormSubmit
+            fetch("https://formsubmit.co/ecw3842@gmail.com", {
+                method: "POST",
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => {
+                if (response.ok) {
+                    showStep('step-merci');
+                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } }); // Double explosion pour la fin !
+                } else {
+                    btnSubmit.innerText = "Oups, erreur ! Réessaie ❤️";
+                }
+            })
+            .catch(error => {
+                btnSubmit.innerText = "Oups, erreur ! Réessaie ❤️";
+            });
+        });
     </script>
 </body>
 </html>
