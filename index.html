@@ -67,26 +67,6 @@
             margin-bottom: 30px;
         }
 
-        /* Bouton Musique */
-        #btn-music {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ffe4e1;
-            border: none;
-            border-radius: 50px;
-            padding: 8px 12px;
-            font-size: 0.9em;
-            color: #d81b60;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: bold;
-        }
-
-        #btn-music:hover {
-            background: #ffb6c1;
-        }
-
         /* Zone des boutons */
         .buttons-wrapper {
             position: relative;
@@ -229,13 +209,7 @@
 </head>
 <body>
 
-    <audio id="bg-audio" loop>
-        <source src="musique.mp3" type="audio/mpeg">
-    </audio>
-
     <div id="container">
-        <button id="btn-music" onclick="toggleMusic()">🎵 Play</button>
-
         <div id="question-section">
             <h1>Coucou 😳</h1>
             <p>J'ai trop hâte que tu viennes en vacances. Dis, est-ce que tu veux partir en vadrouille avec ton chéri ?</p>
@@ -255,10 +229,9 @@
             heart.innerText = Math.random() > 0.5 ? '🤍' : '🩷'; 
             heart.style.left = Math.random() * 100 + 'vw';
             
-            const duration = Math.random() * 5 + 5; // Durée entre 5s et 10s
+            const duration = Math.random() * 5 + 5; 
             heart.style.animationDuration = duration + 's';
             
-            // L'astuce magique : un délai négatif fait commencer l'animation en plein milieu !
             if (isInitial) {
                 heart.style.animationDelay = '-' + (Math.random() * duration) + 's';
             }
@@ -267,39 +240,20 @@
             
             document.body.appendChild(heart);
 
-            // On nettoie les cœurs une fois qu'ils ont fini de monter
             setTimeout(() => {
                 heart.remove();
             }, duration * 1000);
         }
 
-        // 1. Au chargement de la page, on génère 15 cœurs instantanément répartis sur l'écran
         for(let i = 0; i < 15; i++) {
             createFloatingHeart(true);
         }
-
-        // 2. Ensuite, on continue d'en générer un nouveau toutes les 800ms
         setInterval(() => createFloatingHeart(false), 800);
         // ------------------------------------
 
         const btnNon = document.getElementById("btn-non");
         const btnOui = document.getElementById("btn-oui");
         const container = document.getElementById("container");
-        const audio = document.getElementById("bg-audio");
-        const btnMusic = document.getElementById("btn-music");
-
-        // --- GESTION DE LA MUSIQUE ---
-        let isPlaying = false;
-        function toggleMusic() {
-            if (isPlaying) {
-                audio.pause();
-                btnMusic.innerText = "🎵 Play";
-            } else {
-                audio.play();
-                btnMusic.innerText = "🔇 Mute";
-            }
-            isPlaying = !isPlaying;
-        }
 
         // --- FUITE DU BOUTON NON ---
         function moveButton() {
@@ -339,7 +293,6 @@
             });
 
             container.innerHTML = `
-                <button id="btn-music" onclick="toggleMusic()" style="position: absolute; top: 15px; right: 15px;">🎵 Musique</button>
                 <div class="form-container">
                     <h2>Génial ! Choisis ce qui te fait envie ✨</h2>
                     
@@ -418,7 +371,7 @@
                 </div>
             `;
 
-            // INTERCEPTION DE L'ENVOI POUR AFFICHER LA PHOTO
+            // INTERCEPTION DE L'ENVOI POUR LA PAGE DE FIN
             const form = document.getElementById("form-vacances");
             form.addEventListener("submit", function(e) {
                 e.preventDefault(); 
