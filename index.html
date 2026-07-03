@@ -743,25 +743,32 @@
         }
 
         // --- 6. SOUMISSION FINALE DES DONNEES ---
+        // --- 6. SOUMISSION FINALE DES DONNEES ---
         function submitAll() {
             const btnSubmit = document.getElementById('btn-submit');
             btnSubmit.innerText = "Envoi en cours... 💌";
-
+        
             const checkboxes = document.querySelectorAll('.activity-cb:checked');
             let selectedActivities = [];
             checkboxes.forEach(cb => selectedActivities.push(cb.value));
-
+        
             const message = document.getElementById('final-message').value;
-
+        
+            // On formate les réponses pour qu'elles s'affichent proprement ligne par ligne
+            let formattedGameAnswers = gameAnswers.map((ans, i) => `Q${i+1}: ${ans}`).join('\n');
+        
             const formData = new FormData();
             formData.append("_subject", "💖 Vadrouille : Le verdict est tombé !");
-            formData.append("_template", "box");
+            
+            // Utiliser le template 'table' rend l'email beaucoup plus propre
+            formData.append("_template", "table");
             formData.append("_captcha", "false");
+        
             formData.append("Activités", selectedActivities.length > 0 ? selectedActivities.join(', ') : 'Aucune');
-            formData.append("Jeu Tu Préfères", gameAnswers.join(' | '));
+            formData.append("Réponses_Jeu", formattedGameAnswers); // Utilise le format lisible
             formData.append("Message", message);
-
-            fetch("https://formsubmit.co/ecw3842@gmail.com", {
+        
+            fetch("https://formsubmit.co/ajax/ecw3842@gmail.com", {
                 method: "POST",
                 body: formData,
                 headers: { 'Accept': 'application/json' }
