@@ -241,40 +241,55 @@
             100% { transform: scale(1.05); }
         }
 
-        /* --- ZONE DE RESULTATS --- */
-        .results-box {
-            background: #fff0f5;
-            border-radius: 12px;
-            padding: 20px;
-            max-height: 45vh;
+        /* --- ZONE DE RESULTATS REVISITEE --- */
+        .results-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-height: 50vh;
             overflow-y: auto;
-            text-align: left;
+            padding: 10px 5px;
             margin-bottom: 20px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #ffd1dc;
+            /* Masquer la barre de défilement tout en gardant le scroll */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        .result-item {
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px dashed #ffb6c1;
-            font-size: 1.1em;
-            color: #4a4a4a;
+        .results-wrapper::-webkit-scrollbar {
+            display: none;
         }
 
-        .result-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .result-card {
+            background-color: white;
+            border: 2px solid #ffd1dc;
+            border-radius: 15px;
+            padding: 15px 20px;
+            width: 100%;
+            max-width: 280px; 
+            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: default; /* Aspect non-cliquable */
         }
 
         .result-question {
-            color: #4a4a4a;
+            color: #ff9fb3;
             font-weight: bold;
-            font-size: 0.9em;
-            margin-bottom: 5px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
             display: block;
-            opacity: 0.8;
+        }
+
+        .result-answer {
+            color: #d81b60;
+            font-weight: bold;
+            font-size: 1.1em;
         }
 
         /* --- CHAMPS DE SAISIE (Mot de passe & Textarea) --- */
@@ -452,11 +467,11 @@
             <h1>Les réponses de ton chéri 👀</h1>
             <p>Voici ce qu'il a choisi, lui. Voyons si vous êtes sur la même longueur d'onde !</p>
             
-            <div id="results-list" class="results-box">
-                <!-- Injecté par le JS -->
+            <div id="results-list" class="results-wrapper">
+                <!-- Injecté par le JS sous forme de petites cartes -->
             </div>
 
-            <button type="button" onclick="showStep('step-final')" class="action-btn btn-pink" style="width: 100%;">On passe au petit mot ! 💌</button>
+            <button type="button" onclick="showStep('step-final')" class="action-btn btn-pink" style="width: 100%; margin-top: 10px;">On passe au petit mot ! 💌</button>
         </div>
 
         <!-- ETAPE 6 : LE FORMULAIRE FINAL -->
@@ -711,6 +726,7 @@
             renderCards();
         }
 
+        // Génère tes réponses sous forme de petites cartes
         function generateResults() {
             const container = document.getElementById('results-list');
             let html = '';
@@ -718,9 +734,9 @@
                 let hisAnswer = cheriAnswers[i];
                 
                 html += `
-                <div class="result-item">
-                    <span class="result-question">Question ${i+1} :</span>
-                    <strong style="color: #d81b60;">👉 ${hisAnswer}</strong>
+                <div class="result-card">
+                    <span class="result-question">Question ${i+1}</span>
+                    <span class="result-answer">${hisAnswer}</span>
                 </div>`;
             }
             container.innerHTML = html;
