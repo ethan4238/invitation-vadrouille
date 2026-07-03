@@ -463,14 +463,15 @@
         </div>
 
         <!-- ETAPE 5 : LES RESULTATS DE CHERI -->
-        <div id="step-results" class="step">
-            <h1>Les réponses de ton chéri 👀</h1>
+       <div id="step-results" class="step">
+            <!-- J'ai ajouté l'ID score-text ici pour que le JS puisse le trouver -->
+            <h1 id="score-text"></h1> 
             <p>Voici ce qu'il a choisi, lui. Voyons si vous êtes sur la même longueur d'onde !</p>
             
             <div id="results-list" class="results-wrapper">
-                <!-- Injecté par le JS sous forme de petites cartes -->
+                <!-- Les cartes seront injectées ici -->
             </div>
-
+        
             <button type="button" onclick="showStep('step-final')" class="action-btn btn-pink" style="width: 100%; margin-top: 10px;">On passe au petit mot ! 💌</button>
         </div>
 
@@ -728,17 +729,51 @@
 
         // Génère tes réponses sous forme de petites cartes
         function generateResults() {
+            // 1. Calcul du score
+            let score = 0;
+            for (let i = 0; i < cheriAnswers.length; i++) {
+                // On compare la réponse de l'utilisateur avec celle du chéri
+                if (gameAnswers[i] === cheriAnswers[i]) {
+                    score++;
+                }
+            }
+            
+            // Calcul du pourcentage
+            let percent = Math.round((score / cheriAnswers.length) * 100);
+            
+            // Message personnalisé selon le score
+            let message = "";
+            if (percent >= 80) {
+                message = "Parfait, on est faits l'un pour l'autre ! 😍";
+            } else if (percent >= 50) {
+                message = "Pas mal du tout, on a des points communs ! 😊";
+            } else {
+                message = "On va devoir négocier un peu... 😏";
+            }
+        
+            // 2. Mise à jour du titre avec le score (Assure-toi d'avoir <h1 id="score-text"> dans ton HTML)
+            const scoreTitle = document.getElementById('score-text');
+            if (scoreTitle) {
+                scoreTitle.innerHTML = `${percent}% de compatibilité ! <br><span style="font-size: 0.5em; color: #555;">${message}</span>`;
+            }
+        
+            // 3. Génération des cartes de réponses
             const container = document.getElementById('results-list');
             let html = '';
-            for(let i=0; i < cheriAnswers.length; i++) {
+            
+            for(let i = 0; i < cheriAnswers.length; i++) {
                 let hisAnswer = cheriAnswers[i];
+                // On regarde si c'est un match ou non pour changer la bordure
+                let isMatch = (gameAnswers[i] === cheriAnswers[i]);
+                let borderColor = isMatch ? "#4caf50" : "#ffd1dc"; // Vert si match, rose sinon
                 
                 html += `
-                <div class="result-card">
+                <div class="result-card" style="border: 2px solid ${borderColor};">
                     <span class="result-question">Question ${i+1}</span>
                     <span class="result-answer">${hisAnswer}</span>
                 </div>`;
             }
+            
             container.innerHTML = html;
         }
 
