@@ -756,6 +756,7 @@
             const formData = new FormData();
             formData.append("_subject", "💖 Vadrouille : Le verdict est tombé !");
             formData.append("_template", "box");
+            formData.append("_captcha", "false");
             formData.append("Activités", selectedActivities.length > 0 ? selectedActivities.join(', ') : 'Aucune');
             formData.append("Jeu Tu Préfères", gameAnswers.join(' | '));
             formData.append("Message", message);
