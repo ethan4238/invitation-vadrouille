@@ -140,7 +140,6 @@
         }
 
         .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
-        
         .custom-checkbox { display: none; }
         
         .checkbox-label {
@@ -183,12 +182,13 @@
             color: #555;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
-            transition: all 0.3s ease;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100px;
             text-align: center;
+            user-select: none;
         }
 
         .game-card:hover {
@@ -197,11 +197,18 @@
             border-color: #ff5c8a;
         }
 
+        /* NOUVEAU : ANIMATION DE REBOND AU CLIC */
         .game-card.selected {
             background-color: #4caf50; 
             color: white;
             border-color: #4caf50;
-            transform: scale(1.05);
+            animation: popCheck 0.4s ease-out forwards;
+        }
+
+        @keyframes popCheck {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1.05); }
         }
 
         /* Textarea pour la fin */
@@ -226,17 +233,15 @@
 
     <div id="container">
         
-        <!-- ETAPE 1 : LA QUESTION -->
         <div id="step-question" class="step active">
             <h1>Coucou 😳</h1>
             <p>J'ai trop hâte que tu viennes en vacances. Dis, est-ce que tu veux partir en vadrouille avec ton chéri ?</p>
             <div class="buttons-wrapper">
-                <button id="btn-oui" class="action-btn btn-pink" style="margin-top:0;">Oui 😊</button>
+                <button id="btn-oui" class="action-btn btn-pink" onclick="startActivities()" style="margin-top:0;">Oui 😊</button>
                 <button id="btn-non" class="action-btn" style="margin-top:0;">Non 😢</button>
             </div>
         </div>
 
-        <!-- ETAPE 2 : LES ACTIVITES -->
         <div id="step-activities" class="step">
             <h2>Génial ! Choisis ce qui te fait envie ✨</h2>
             
@@ -308,33 +313,28 @@
                 </div>
             </div>
             
-            <button type="button" onclick="goToGame()" class="action-btn btn-pink">Ok, on passe à la suite !</button>
+            <button type="button" onclick="goToGame()" class="action-btn btn-pink">Ok ❤️</button>
         </div>
 
-        <!-- ETAPE 3 : LE JEU "TU PREFERES" -->
         <div id="step-game" class="step">
             <h1 class="game-title">Tu préfères ? 🤔</h1>
             <div class="cards-wrapper" id="game-cards">
-                <!-- Les cartes seront injectées ici par le javascript -->
-            </div>
+                </div>
         </div>
 
-        <!-- ETAPE 4 : L'ENTRACTE -->
         <div id="step-intermission" class="step">
             <h1>Mmmh pas mal... 😏</h1>
-            <p style="font-size: 1.3em;">On va voir si tu t'en sors aussi bien avec la suite. Passons à un peu plus compliqué !</p>
+            <p style="font-size: 1.3em;">Maintenant passons à un peu plus compliqué !</p>
             <button type="button" onclick="startPartTwo()" class="action-btn btn-pink">Je suis prête !</button>
         </div>
 
-        <!-- ETAPE 5 : LE FORMULAIRE FINAL -->
         <div id="step-final" class="step">
-            <h1>Une dernière chose... 💌</h1>
+            <h1>Enfin... 💌</h1>
             <p>Laisse-moi un petit mot (ou si t'as d'autres envies pour le séjour !)</p>
             <textarea id="final-message" rows="4" placeholder="Écris ton mot ici..."></textarea>
-            <button type="button" id="btn-submit" class="action-btn btn-pink" style="width: 100%;">Envoyer tout ça ❤️</button>
+            <button type="button" id="btn-submit" onclick="submitAll()" class="action-btn btn-pink" style="width: 100%;">Envoyer tout ça ❤️</button>
         </div>
 
-        <!-- ETAPE 6 : MERCI -->
         <div id="step-merci" class="step">
             <img src="photo.jpg" alt="Ton chéri" style="width: 400px; height: 300px; object-fit: cover; border-radius: 5%; box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4); margin-bottom: 15px;">
             <h2 style="font-size: 1.8em; color: #d81b60;">C'est noté ! 🥰</h2>
@@ -368,7 +368,6 @@
 
         // --- 3. FUITE DU BOUTON NON ---
         const btnNon = document.getElementById("btn-non");
-        const btnOui = document.getElementById("btn-oui");
         
         function moveButton() {
             if (btnNon.style.position !== 'fixed') {
@@ -387,10 +386,10 @@
         btnNon.addEventListener("touchstart", function(e) { e.preventDefault(); moveButton(); });
 
         // --- 4. CLIC SUR OUI (Vers activités) ---
-        btnOui.addEventListener("click", function() {
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ff5c8a', '#ffb6c1', '#ffffff'] });
+        function startActivities() {
+            try { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ff5c8a', '#ffb6c1', '#ffffff'] }); } catch(e){}
             showStep('step-activities');
-        });
+        }
 
         // Fonction coeur checkbox
         function toggleHeart(checkbox) {
@@ -399,18 +398,16 @@
 
         // --- 5. LE JEU "TU PREFERES" ---
         const questionsTuPreferes = [
-            // PARTIE 1 (Facile)
             ["Sucré 🥐", "Salé 🧀"],
             ["Montagne 🏔️", "Plage 🏖️"],
             ["Lève-tôt 🌅", "Couche-tard 🌃"],
             ["Hôtel confort 🛏️", "Bivouac sauvage ⛺"],
             ["Resto chic 🍷", "Pique-nique 🥪"],
-            // PARTIE 2 (Compliqué)
-            ["Mes cheveux", "Mes yeux"],
-            ["Dormir sur moi", "Tu es mon coussin"],
-            ["Un massage", "Une chanson à la guitare"],
-            ["Perdre au tennis", "Perdre au tennis"],
-            ["Un bisou", "Un câlin "]
+            ["Ne plus jamais manger de fromage 😱", "Ne plus jamais boire de vin 😭"],
+            ["Pouvoir voler 🕊️", "Être invisible 👻"],
+            ["Oublier ton téléphone 📱", "Oublier ta brosse à dents 🪥"],
+            ["Toujours dire la vérité 😇", "Toujours mentir 🤥"],
+            ["Un gros bisou 💋", "Un gros câlin 🤗"]
         ];
 
         let currentQuestionIndex = 0;
@@ -423,35 +420,29 @@
 
         function renderCards() {
             const cardsContainer = document.getElementById('game-cards');
-            cardsContainer.innerHTML = ''; // Vide les anciennes cartes
-
+            cardsContainer.innerHTML = ''; 
             const q = questionsTuPreferes[currentQuestionIndex];
             
-            // Création carte 1
             const card1 = document.createElement('div');
             card1.className = 'game-card';
             card1.innerText = q[0];
-            card1.onclick = () => selectCard(card1, q[0]);
+            card1.onclick = function() { selectCard(this, q[0]); };
 
-            // Création carte 2
             const card2 = document.createElement('div');
             card2.className = 'game-card';
             card2.innerText = q[1];
-            card2.onclick = () => selectCard(card2, q[1]);
+            card2.onclick = function() { selectCard(this, q[1]); };
 
             cardsContainer.appendChild(card1);
             cardsContainer.appendChild(card2);
         }
 
         function selectCard(cardElement, answer) {
-            // Empêche de cliquer deux fois vite
             if(cardElement.classList.contains('selected')) return; 
 
-            // Met la carte en vert
             cardElement.classList.add('selected');
             gameAnswers.push(answer);
 
-            // Attend 600ms pour montrer le vert, puis passe à la suite
             setTimeout(() => {
                 currentQuestionIndex++;
                 
@@ -460,7 +451,7 @@
                 } else if (currentQuestionIndex === 10) {
                     showStep('step-final');
                 } else {
-                    renderCards(); // Question suivante
+                    renderCards(); 
                 }
             }, 600);
         }
@@ -471,27 +462,23 @@
         }
 
         // --- 6. SOUMISSION FINALE DES DONNEES ---
-        document.getElementById('btn-submit').addEventListener('click', function() {
-            const btnSubmit = this;
+        function submitAll() {
+            const btnSubmit = document.getElementById('btn-submit');
             btnSubmit.innerText = "Envoi en cours... 💌";
 
-            // Récupère les activités cochées
             const checkboxes = document.querySelectorAll('.activity-cb:checked');
             let selectedActivities = [];
             checkboxes.forEach(cb => selectedActivities.push(cb.value));
 
-            // Récupère le mot de la fin
             const message = document.getElementById('final-message').value;
 
-            // Prépare les données à envoyer
             const formData = new FormData();
             formData.append("_subject", "💖 Vadrouille : Le verdict est tombé !");
             formData.append("_template", "box");
-            formData.append("Activités choisies", selectedActivities.length > 0 ? selectedActivities.join(', ') : 'Aucune (bizarre...)');
-            formData.append("Réponses au jeu", gameAnswers.join(' | '));
-            formData.append("Mot de la fin", message);
+            formData.append("Activités", selectedActivities.length > 0 ? selectedActivities.join(', ') : 'Aucune');
+            formData.append("Jeu Tu Préfères", gameAnswers.join(' | '));
+            formData.append("Message", message);
 
-            // Envoi via fetch vers FormSubmit
             fetch("https://formsubmit.co/ecw3842@gmail.com", {
                 method: "POST",
                 body: formData,
@@ -500,7 +487,7 @@
             .then(response => {
                 if (response.ok) {
                     showStep('step-merci');
-                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } }); // Double explosion pour la fin !
+                    try { confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } }); } catch(e){}
                 } else {
                     btnSubmit.innerText = "Oups, erreur ! Réessaie ❤️";
                 }
@@ -508,7 +495,7 @@
             .catch(error => {
                 btnSubmit.innerText = "Oups, erreur ! Réessaie ❤️";
             });
-        });
+        }
     </script>
 </body>
 </html>
