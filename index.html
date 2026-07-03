@@ -258,7 +258,7 @@
             margin-bottom: 12px;
             padding-bottom: 12px;
             border-bottom: 1px dashed #ffb6c1;
-            font-size: 1.05em;
+            font-size: 1.1em;
             color: #4a4a4a;
         }
 
@@ -269,37 +269,65 @@
         }
 
         .result-question {
-            color: #d81b60;
+            color: #4a4a4a;
             font-weight: bold;
             font-size: 0.9em;
             margin-bottom: 5px;
             display: block;
+            opacity: 0.8;
         }
 
-        /* Textarea pour la fin */
-        textarea {
+        /* --- CHAMPS DE SAISIE (Mot de passe & Textarea) --- */
+        textarea, #password-input {
             width: 100%;
             box-sizing: border-box;
             padding: 12px;
-            border: 1px solid #ffb6c1;
+            border: 2px solid #ffb6c1;
             border-radius: 8px;
             font-family: inherit;
             font-size: 1.1em;
+            outline: none;
+            transition: 0.3s;
+        }
+        
+        textarea {
             resize: vertical;
             margin-top: 10px;
             margin-bottom: 20px;
-            outline: none;
         }
-        textarea:focus { border-color: #ff5c8a; box-shadow: 0 0 5px rgba(255, 92, 138, 0.3); }
+
+        #password-input {
+            text-align: center;
+            font-size: 1.3em;
+            color: #d81b60;
+            font-weight: bold;
+            max-width: 250px;
+            margin: 0 auto 15px auto;
+            display: block;
+        }
+
+        textarea:focus, #password-input:focus { 
+            border-color: #ff5c8a; 
+            box-shadow: 0 0 8px rgba(255, 92, 138, 0.4); 
+        }
 
     </style>
 </head>
 <body>
 
     <div id="container">
+
+        <!-- ETAPE 0 : LE MOT DE PASSE -->
+        <div id="step-password" class="step active">
+            <h1>Un mot de passe un peu spécial ;)</h1>
+            <p>Pour accéder à la suite, il me faut une date importante...</p>
+            <input type="text" id="password-input" placeholder="JJ/MM/AAAA" maxlength="10">
+            <p id="password-error" style="color: #d81b60; font-weight: bold; display: none; margin-bottom: 15px;">Ce n'est pas la bonne date... 😢</p>
+            <button type="button" onclick="checkPassword()" class="action-btn btn-pink" style="margin-top: 5px;">Valider 🔐</button>
+        </div>
         
         <!-- ETAPE 1 : LA QUESTION -->
-        <div id="step-question" class="step active">
+        <div id="step-question" class="step">
             <h1>Coucou 😳</h1>
             <p>J'ai trop hâte que tu viennes en vacances. Dis, est-ce que tu veux partir en vadrouille avec ton chéri ?</p>
             <div class="buttons-wrapper">
@@ -401,7 +429,7 @@
 
             <!-- CONTENEUR DU JOKER -->
             <div id="joker-wrapper" style="display: none;">
-                <button type="button" id="btn-joker" class="action-btn" onclick="useJoker()">🃏 Joker ! (Passer la question)</button>
+                <button type="button" id="btn-joker" class="action-btn" onclick="useJoker()">🃏 Joker ! (1 seul - Passer la question)</button>
             </div>
         </div>
 
@@ -449,6 +477,29 @@
     </div>
 
     <script>
+        // --- 0. GESTION DU MOT DE PASSE ---
+        const passwordInput = document.getElementById('password-input');
+        
+        // Ajoute les slashes automatiquement pour faciliter la saisie (JJ/MM/AAAA)
+        passwordInput.addEventListener('input', function(e) {
+            let val = this.value.replace(/\D/g, ''); // Enlève tout ce qui n'est pas un chiffre
+            if (val.length >= 2 && val.length < 4) {
+                this.value = val.slice(0,2) + '/' + val.slice(2);
+            } else if (val.length >= 4) {
+                this.value = val.slice(0,2) + '/' + val.slice(2,4) + '/' + val.slice(4,8);
+            }
+            document.getElementById('password-error').style.display = 'none'; // Cache l'erreur si elle tape
+        });
+
+        function checkPassword() {
+            const pwd = document.getElementById('password-input').value;
+            if (pwd === "20/06/2026") {
+                showStep('step-question');
+            } else {
+                document.getElementById('password-error').style.display = 'block';
+            }
+        }
+
         // --- 1. ANIMATION DES COEURS EN FOND ---
         function createFloatingHeart(isInitial = false) {
             const heart = document.createElement('div');
@@ -523,7 +574,7 @@
             ["Dans la voiture aménagée 🚐", "En pleine nature 🌲"]
         ];
 
-        // LES REPONSES DU CHERI
+        // LES REPONSES DU CHERI SEULES
         const cheriAnswers = [
             // Partie 1
             "Salé 🧀",
@@ -663,15 +714,13 @@
         function generateResults() {
             const container = document.getElementById('results-list');
             let html = '';
-            for(let i=0; i < questionsTuPreferes.length; i++) {
-                let herAnswer = gameAnswers[i];
+            for(let i=0; i < cheriAnswers.length; i++) {
                 let hisAnswer = cheriAnswers[i];
                 
                 html += `
                 <div class="result-item">
                     <span class="result-question">Question ${i+1} :</span>
-                    <strong>👩 Toi :</strong> ${herAnswer}<br>
-                    <strong style="color: #ff5c8a;">🧔 Lui :</strong> ${hisAnswer}
+                    <strong style="color: #d81b60;">👉 ${hisAnswer}</strong>
                 </div>`;
             }
             container.innerHTML = html;
